@@ -58,13 +58,15 @@ Setup
 		}
 	}
 ```
-8. Migrate Database
+8. Migrating Database <br>
+	To apply the schema changes in Postgres Database whenever models in Django are changed, we need to migrate the database through these instructions.
 ```
 	cd <project_name>
 	python manage.py makemigrations
 	python manage.py migrate
 ```
-9. Create Super User and Trial Run Django - 127.0.0.1:8000/
+9. Create Super User and Trial Run Django - 127.0.0.1:8000/ <br>
+	A superuser allows us to manage the database through admin page. 127.0.0.1:8000/admin
 ```
 	python manage.py createsuperuser
 		user - <project>
@@ -72,7 +74,54 @@ Setup
 		password - <project12345>
 	python manage.py runserver
 ```
-10. Run Backend
+10. Running Backend Server
 ```
 	python manage.py runserver
 ```
+11. Add Django App and change <project_name>/settings.py file
+
+```
+	python manage.py startapp <app_name>
+```
+```
+	INSTALLED_APPS = [
+			'django.contrib.admin',
+			'django.contrib.auth',
+			'django.contrib.contenttypes',
+			'django.contrib.sessions',
+			'django.contrib.messages',
+			'django.contrib.staticfiles',
++			'<app_name>',
+	]
+```
+12. Using Graphene
+```
+	pip install graphene-django
+```
+13. Create a graphql folder in the app folder <br>
+	Inside this folder, create a schema.py file with the similar structure
+
+```
+	import graphene
+
+	from .account.mutation import Mutation as AccountMutation
+	from .account.query import Query as AccountQuery
+
+	class Mutations(AccountMutation, graphene.ObjectType): pass
+	class Queries(AccountQuery, graphene.ObjectType): pass
+
+	schema = graphene.Schema(query=Queries, mutation=Mutations)
+```
+14. Add graphene-django app in the INSTALLED_APPS in settings.py
+```
+	INSTALLED_APPS = [
+			'django.contrib.admin',
+			'django.contrib.auth',
+			'django.contrib.contenttypes',
+			'django.contrib.sessions',
+			'django.contrib.messages',
+			'django.contrib.staticfiles',
+			'<project_name>',
++			'graphene_django',
+	]
+``` 
